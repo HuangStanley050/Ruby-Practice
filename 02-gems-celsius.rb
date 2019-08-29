@@ -13,4 +13,3 @@
 # d. Use the colorize gem to make the different strings different colors: blue for "its freezing", yellow for "it's pretty good 🤙" and red for "its boiling"
 
 # e. Move the method call into another file named app.rb, use require_relative to make this work
-
