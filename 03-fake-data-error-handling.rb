@@ -1,6 +1,5 @@
 # Faker Gem challenge
 
-
 # Ask the user to input a Faker.Name method.
 
 # Write a method which does the following...
