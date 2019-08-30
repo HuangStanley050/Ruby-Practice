@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # I want you to just have a quick play with the gem 'colorize' https://github.com/fazibear/colorize
 
 # 1. Figure out how to install the gem
@@ -7,3 +9,14 @@
 # 3. If the number is below 10 then puts a message "your number is below 10" and make this text blue
 
 # 4. If the number is above 10 then puts a message "your number is above 10" and make this text red
+
+require 'colorize'
+puts 'Type in a number '
+print '>> '
+input = gets.chomp.to_i
+
+if input < 10
+  puts 'your number is below 10'.colorize(:blue)
+else
+  puts 'your number is above 10'.colorize(:red)
+end
