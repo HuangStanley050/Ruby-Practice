@@ -47,6 +47,10 @@ class Person
     encrypt(@password)
   end
 
+  def decode_password
+    decoded = decode(@passoword)
+  end
+
   # 3. Create an instance of Person and set a password.
   # Print out the encrypted password.
 
@@ -96,7 +100,9 @@ class Person
     end
   end
 
-  def babble_password; end
+  def babble_password
+    babble_this_bubble(@password)
+  end
 
   def encode; end
 
@@ -139,7 +145,9 @@ end
 
 person1 = Person.new('Alex')
 person1.password = 'AAAAA'
-person1.encrypted_password
+puts person1.encrypted_password
+puts person1.babble_password
+# puts person1.decode('11770b3ea657fe68cba19675143e4715c8de9d763d3c21a85af6b7513d43997d')
 
 # person1.forgot_password
 # person1.reset_password
