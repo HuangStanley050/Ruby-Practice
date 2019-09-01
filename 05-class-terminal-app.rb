@@ -7,6 +7,10 @@
 # The app can be as simple as you want it to be - if you're comfortable with just one class, just use one class.
 
 # Before you start coding, discuss with your partner and write down all your ideas. Then start coding. Hope you have fun!
+require 'tty'
+
+font = TTY::Font.new(:doom)
+prompt = TTY::Prompt.new
 
 class Restaurant
   attr_reader :menu, :boss
@@ -18,6 +22,12 @@ class Restaurant
     @staff = staff
     @cooks = cooks
     @orders = []
+  end
+
+  def promptOrder(prompt)
+    choices = %w[vodka beer wine whisky bourbon]
+    selection = prompt.multi_select('Select drinks?', choices)
+    puts selection
   end
 
   # menu will be array of hash to have key value for the price of each item
@@ -50,6 +60,10 @@ first_order = { customer: 'John', orderId: 1, burgers: 2, fries: 1, coke: 1 }
 second_order = { customer: 'Rob', orderId: 2, burgers: 0, fries: 10, coke: 3 }
 
 wendy = Restaurant.new([burger, coke, fries], 'Timmy', %w[Staff1 Staff2], %w[Jimmy Ronny Peter])
-wendy.takeOrder(first_order)
-wendy.takeOrder(second_order)
-wendy.caculateBill(1)
+wendy.promptOrder(prompt)
+# wendy.takeOrder(first_order)
+# wendy.takeOrder(second_order)
+# wendy.caculateBill(1)
+
+# puts font.write('Wendy', letter_spacing: 4)
+# prompt.select('What would you like to order ?', %w[burger fries coke])
