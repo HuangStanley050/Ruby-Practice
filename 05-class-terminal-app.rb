@@ -11,10 +11,11 @@ require 'tty'
 
 font = TTY::Font.new(:doom)
 prompt = TTY::Prompt.new
+table = TTY::Table.new %w[Item Price], [['Burger', '$10.00'], ['Fries', '$3.50'], ['Coke', '$2.00']]
 
 class Restaurant
   attr_reader :menu, :boss
-  attr_accessor :staff, :cooks, :orders
+  attr_accessor :staff, :cooks, :orders, :orderIds
 
   def initialize(menu, boss, staff, cooks)
     @menu = menu
@@ -22,48 +23,60 @@ class Restaurant
     @staff = staff
     @cooks = cooks
     @orders = []
+    @orderIds = []
   end
 
   def promptOrder(prompt)
-    choices = %w[vodka beer wine whisky bourbon]
-    selection = prompt.multi_select('Select drinks?', choices)
-    puts selection
+    choices = %w[Burger Fries Coke]
+    selection = prompt.multi_select('Select food ?', choices)
+    orderDetail(selection, prompt)
   end
 
-  # menu will be array of hash to have key value for the price of each item
-  # order will be an hash with key of order number, and the menu item
-  # {customer:"Alex", orderId:1, burger: 2 , fries: 1, coke: 2}
+  def orderDetail(_selection, prompt)
+    foods = []
+
+    _selection.each do |food|
+      foods.push(food)
+    end
+
+    result = prompt.collect do
+      foods.each do |food|
+        key(food.downcase.to_sym).ask("How many would you like for #{food}", convert: :int)
+      end
+    end
+    orderId = rand(1..1000)
+    orderIds.push(orderId)
+    order = { orderId: orderId, burger: result[:burger] || 0, fries: result[:fries] || 0, coke: result[:coke] || 0 }
+    takeOrder(order)
+  end
+
   def takeOrder(order)
     @orders.push(order)
   end
 
-  def caculateBill(_orderId)
+  def calculateBill(_orderId)
     # stuff going to be here
     @orders.each do |_order|
       next unless _order[:orderId] == _orderId
 
-      burgerPrice = _order[:burgers].to_f * 10.0
+      burgerPrice = _order[:burger].to_f * 10.0
       cokePrice = _order[:coke].to_f * 2
       friesPrice = _order[:fries].to_f * 3.5
 
       total_price = burgerPrice + friesPrice + cokePrice
-      puts total_price
+      puts "The total bill comes to #{total_price}"
     end
-end
+  end
 end
 
 burger = { burger: 10 }
 coke = { coke: 2 }
 fries = { fries: 3.5 }
 
-first_order = { customer: 'John', orderId: 1, burgers: 2, fries: 1, coke: 1 }
-second_order = { customer: 'Rob', orderId: 2, burgers: 0, fries: 10, coke: 3 }
-
 wendy = Restaurant.new([burger, coke, fries], 'Timmy', %w[Staff1 Staff2], %w[Jimmy Ronny Peter])
+puts font.write("Wendy's", letter_spacing: 4)
+puts table.render(:ascii)
+puts '-------------------'
 wendy.promptOrder(prompt)
-# wendy.takeOrder(first_order)
-# wendy.takeOrder(second_order)
-# wendy.caculateBill(1)
-
-# puts font.write('Wendy', letter_spacing: 4)
-# prompt.select('What would you like to order ?', %w[burger fries coke])
+# puts wendy.orders
+wendy.calculateBill(wendy.orderIds[0])
